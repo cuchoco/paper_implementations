@@ -10,17 +10,16 @@ import torch.nn as nn
 from torch.utils.data import Dataset,DataLoader
 from tensorboardX import SummaryWriter
 import argparse
+
 import warnings
-
 warnings.filterwarnings(action='ignore')
-sitk.ProcessObject.GlobalDefaultDebugOff()
-sitk.ProcessObject.GlobalWarningDisplayOff()
 
-
+# restriction when you have multi gpu
 os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"
 os.environ["CUDA_VISIBLE_DEVICES"] = '2'
 
 
+# Dataset class
 class BrainDataset(Dataset):
     
     def __init__(self, df, transform=None):
@@ -80,7 +79,7 @@ class BrainDataset(Dataset):
     def __len__(self):
         return len(self.df)
     
-    
+# collater for dataloader
 def collater(data):
     imgs = [s['img'] for s in data]
     labels = [s['label'] for s in data]
@@ -99,9 +98,9 @@ def get_args():
      
     parser.add_argument('--info', type=str, default='./data/backbone/info.csv')
     parser.add_argument('--lr', type=float, default=1e-3)
-    parser.add_argument('--start_epoch', type=int, default=11)
+    parser.add_argument('--start_epoch', type=int, default=1)
     parser.add_argument('--num_epochs', type=int, default=10)
-    parser.add_argument('--step', type=int, default=2681)
+    parser.add_argument('--step', type=int, default=1)
     parser.add_argument('--pretrained', type=bool, default=True)
     parser.add_argument('--pth_path', type=str, default='./data/backbone/model/epoch10_valloss0.13.pth')
     
